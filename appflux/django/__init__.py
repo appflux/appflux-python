@@ -1,0 +1,1 @@
+from appflux.django.appflux_middleware import AppfluxMiddleware

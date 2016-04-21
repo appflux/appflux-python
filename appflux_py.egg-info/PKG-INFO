@@ -1,0 +1,22 @@
+Metadata-Version: 1.1
+Name: appflux-py
+Version: 0.0.1
+Summary: Appflux
+Home-page: https://appflux.io
+Author: Sawan Gupta
+Author-email: sawan.gupta92@gmail.com
+License: MIT
+Description: working will add later
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: System Administrators
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3.3
+Classifier: Topic :: Software Development
