@@ -1,21 +1,39 @@
 import traceback
 import pdb
 import json
+from appflux.django.appflux_exception import AppfluxException
 
 class AppfluxMiddleware:
+
+    def __init__(self):
+        self.request_hash = {}
+        self.request_hash['bugflux'] = { }
+
     def process_exception(self, request, exception):
-        _request_hash = { }
-        _bugflux_request_hash = _request_hash['bugflux'] = { }
+        if AppfluxException.before != []:
+            for before_callback in AppfluxException.before:
+                before_callback(self, request, exception)
+        # _bugflux_request_hash = Appflux['api_key']
+
+        json_response = self.process_default_exception_data(request, exception)
+
+        if AppfluxException.after != []:
+            for after_callback in AppfluxException.after:
+                after_callback()
+        print json_response
+
+    def process_default_exception_data(self, request, exception):
+        _bugflux_request_hash = self.request_hash['bugflux']
         _env_request_hash = _bugflux_request_hash['env'] = { }
-        _bugflux_request_hash = Appflux['api_key']
         _env_request_hash['request'] = self.process_request_object(request)
         _env_request_hash['session'] = request.COOKIES
         _env_request_hash['params'] = self.process_params_object(request)
         _env_request_hash['headers'] = self.process_meta_data(request)
         _bugflux_request_hash['exception'] = traceback.format_exc()
-        json_response = json.dumps(_request_hash)
-        # pdb.set_trace()
-        print json_response
+        return json.dumps(self.request_hash)
+
+    def add_tab(self, key, data):
+        self.request_hash['bugflux'][key] = data
 
     def process_params_object(self, request):
         _request_hash = {}
