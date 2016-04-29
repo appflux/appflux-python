@@ -2,6 +2,7 @@ import traceback
 import pdb
 import json
 from appflux.django.appflux_exception import AppfluxException
+from appflux.notify import Notify
 
 class AppfluxMiddleware:
 
@@ -20,6 +21,8 @@ class AppfluxMiddleware:
         if AppfluxException.after != []:
             for after_callback in AppfluxException.after:
                 after_callback()
+        Notify(json_response)
+        # urllib2.urlopen('http://localhost:3000/admin/faq/sites', json_response)
         print json_response
 
     def process_default_exception_data(self, request, exception):
