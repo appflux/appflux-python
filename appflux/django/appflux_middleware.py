@@ -1,6 +1,5 @@
 import traceback
 import pdb
-import json
 from appflux.django.appflux_exception import AppfluxException
 from appflux.notify import Notify
 
@@ -11,32 +10,28 @@ class AppfluxMiddleware:
         self.request_hash['bugflux'] = { }
 
     def process_exception(self, request, exception):
-        if AppfluxException.before != []:
-            for before_callback in AppfluxException.before:
-                before_callback(self, request, exception)
-        # _bugflux_request_hash = Appflux['api_key']
+        self.request = request
+        self.exception = exception
+        self.global_attributes = {}
+        self.global_attributes['request'] = request
+        self.global_attributes['exception'] = exception
+        Notify(self)
 
-        json_response = self.process_default_exception_data(request, exception)
-
-        if AppfluxException.after != []:
-            for after_callback in AppfluxException.after:
-                after_callback()
-        Notify(json_response)
-        # urllib2.urlopen('http://localhost:3000/admin/faq/sites', json_response)
-        print json_response
-
-    def process_default_exception_data(self, request, exception):
+    def process_default_exception_data(self):
         _bugflux_request_hash = self.request_hash['bugflux']
         _env_request_hash = _bugflux_request_hash['env'] = { }
-        _env_request_hash['request'] = self.process_request_object(request)
-        _env_request_hash['session'] = request.COOKIES
-        _env_request_hash['params'] = self.process_params_object(request)
-        _env_request_hash['headers'] = self.process_meta_data(request)
-        _bugflux_request_hash['exception'] = traceback.format_exc()
-        return json.dumps(self.request_hash)
+        _env_request_hash['request'] = self.process_request_object(self.request)
+        _env_request_hash['session'] = self.request.COOKIES
+        _env_request_hash['params'] = self.process_params_object(self.request)
+        _env_request_hash['headers'] = self.process_meta_data(self.request)
+        _bugflux_request_hash['exception'] = traceback.extract_stack()
+
+        return self.request_hash
 
     def add_tab(self, key, data):
-        self.request_hash['bugflux'][key] = data
+        self.request_hash['bugflux']['custom_tabs'] = {
+            key: data
+        }
 
     def process_params_object(self, request):
         _request_hash = {}

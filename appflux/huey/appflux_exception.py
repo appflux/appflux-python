@@ -1,7 +1,5 @@
 import redis
-import json
 import ast
-import pdb
 import threading
 from appflux.notify import Notify
 
@@ -15,9 +13,12 @@ class AppfluxException(threading.Thread):
     def work(self, item):
         if(item['type'] == 'message'):
             result = str(item['data']).replace('true', 'True').replace('false', 'False').replace('null', 'None')
-            json_response = ast.literal_eval(result)
-            if(json_response['status'] == 'error-task'):
-                Notify(json.dumps(json_response))
+            self.json_response = ast.literal_eval(result)
+            if(self.json_response['status'] == 'error-task'):
+                Notify(self)
+
+    def process_default_exception_data(self):
+        self.json_response
 
     def run(self):
         for item in self.pubsub.listen():
