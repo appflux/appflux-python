@@ -7,7 +7,6 @@ class AppfluxMiddleware:
 
     def __init__(self):
         self.request_hash = {}
-        self.request_hash['bugflux'] = { }
 
     def process_exception(self, request, exception):
         self.request = request
@@ -18,18 +17,18 @@ class AppfluxMiddleware:
         Notify(self)
 
     def process_default_exception_data(self):
-        _bugflux_request_hash = self.request_hash['bugflux']
+        _bugflux_request_hash = self.request_hash
         _env_request_hash = _bugflux_request_hash['env'] = { }
         _env_request_hash['request'] = self.process_request_object(self.request)
         _env_request_hash['session'] = self.request.COOKIES
         _env_request_hash['params'] = self.process_params_object(self.request)
         _env_request_hash['headers'] = self.process_meta_data(self.request)
-        _bugflux_request_hash['exception'] = traceback.extract_stack()
+        _bugflux_request_hash['backtrace'] = traceback.extract_stack()
 
         return self.request_hash
 
     def add_tab(self, key, data):
-        self.request_hash['bugflux']['custom_tabs'] = {
+        self.request_hash['custom_tabs'] = {
             key: data
         }
 

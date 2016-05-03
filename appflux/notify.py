@@ -1,5 +1,7 @@
 import urllib2
-import json
+import requests
+# import json
+from json import JSONEncoder
 import simplejson
 import os
 import pdb
@@ -12,15 +14,13 @@ class Notify:
                 before_callback(exception_object, exception_object.global_attributes)
 
         json_response = exception_object.process_default_exception_data()
-        json_response['bugflux']['app_id'] = 'fVKhia5dwDbQZLu5iiGtTwGi' #os.environ.get('AppfluxAppID', None)
+        json_response['app_id'] = 'm1LGnkC1zELcSTjb12vWRQni' #os.environ.get('AppfluxAppID', None)
 
         if AppfluxException.after != []:
             for after_callback in AppfluxException.after:
                 after_callback(exception_object, exception_object.global_attributes)
 
-        print simplejson.dumps(json_response)
-
-        self.send(simplejson.dumps(json_response))
+        self.send(JSONEncoder().encode(json_response))
 
     def send(self, json_response):
-        urllib2.urlopen('http://appflux.io/exceptions', json_response)
+        requests.post('http://localhost:3000/exceptions', json={ 'bugflux': json_response })
