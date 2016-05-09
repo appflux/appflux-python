@@ -1,6 +1,14 @@
 setup.py
 appflux/__init__.py
-appflux/hula.py
+appflux/bugflux.py
+appflux/notify.py
+appflux/celery/__init__.py
+appflux/celery/appflux_exception.py
+appflux/django/__init__.py
+appflux/django/appflux_exception.py
+appflux/django/appflux_middleware.py
+appflux/huey/__init__.py
+appflux/huey/appflux_exception.py
 appflux_py.egg-info/PKG-INFO
 appflux_py.egg-info/SOURCES.txt
 appflux_py.egg-info/dependency_links.txt
