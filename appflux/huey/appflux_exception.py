@@ -1,5 +1,6 @@
 import redis
 import ast
+import pdb
 import threading
 from appflux.notify import Notify
 
@@ -24,7 +25,6 @@ class AppfluxException(threading.Thread):
         for item in self.pubsub.listen():
             if item['data'] == "KILL":
                 self.pubsub.unsubscribe()
-                print self, "unsubscribed and finished"
                 break
             else:
                 self.work(item)

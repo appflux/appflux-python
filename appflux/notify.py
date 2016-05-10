@@ -14,7 +14,7 @@ class Notify:
                 before_callback(exception_object, exception_object.global_attributes)
 
         json_response = exception_object.process_default_exception_data()
-        json_response['app_id'] = 'et3vxKRvHLQosSQhAf5vNv3e' #os.environ.get('AppfluxAppID', None)
+        json_response['app_id'] = exception_object.app_id
 
         if AppfluxException.after != []:
             for after_callback in AppfluxException.after:
