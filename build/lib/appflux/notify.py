@@ -1,5 +1,6 @@
 import urllib2
 import requests
+# import json
 from json import JSONEncoder
 import simplejson
 import os
@@ -22,4 +23,4 @@ class Notify:
         self.send(JSONEncoder().encode(json_response))
 
     def send(self, json_response):
-        requests.post('http://appflux.io/exceptions', json={ 'bugflux': json_response })
+        requests.post('http://localhost:3000/exceptions', json={ 'bugflux': json_response })
